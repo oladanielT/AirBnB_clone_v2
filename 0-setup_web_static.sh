@@ -8,13 +8,20 @@ sudo apt install nginx
 sudo service nginx restart
 
 
-sudo mkdir /data
-sudo mkdir /data/web_static
-sudo mkdir /data/web_static/releases/
-sudo mkdir /data/web_static/shared/
-sudo mkdir /data/web_static/releases/test/
-touch /data/web_static/releases/test/index.html
+sudo mkdir -p /data/web_static/shared/
+sudo mkdir -p /data/web_static/{releases,test}
+sudo touch /data/web_static/releases/test/index.html
+echo '<html lang="en">
+<head>
+</head>
+<body>
+    Holberton School
+</body>
+</html>' | sudo tee /data/web_static/releases/test/index.html >/dev/null
+sudo ln -sfn /data/web_static/releases/test /data/web_static/current
 
-ln -s -f /data/web_static/current /data/web_static/releases/test/
+sudo chown -R ubuntu:ubuntu /data/
 
-sudo chown ubuntu:ubuntu 
+config_block="location /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}"
+sudo sed -i "/server_name _;/a $config_block" /etc/nginx/sites-available/default
+sudo service nginx restart
