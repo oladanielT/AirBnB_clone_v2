@@ -5,14 +5,15 @@ if ! [ -x "command -v nginx" ]; then
 	apt-get update
 	sudo apt-get install -y nginx
 	sudo ufw allow 'Nginx HTTP'
+	sudo service nginx start
 fi
 
-mkdir -p /data/web_static/releases/
-mkdir -p /data/web_static/shared/
-mkdir -p /data/web_static/releases/test/
-touch /data/web_static/releases/test/index.html
+sudo mkdir -p /data/web_static/releases/
+sudo mkdir -p /data/web_static/shared/
+sudo mkdir -p /data/web_static/releases/test/
+sudo touch /data/web_static/releases/test/index.html
 
-echo "<html>
+sudo echo "<html>
   <head>
   </head>
   <body>
@@ -21,13 +22,13 @@ echo "<html>
 </html>" | sudo tee /data/web_static/releases/test/index.html
 
 if [ -L "/data/web_static/current" ]; then
-	rm /data/web_static/current
+	sudo rm -rf /data/web_static/current
 fi
-mkdir -p /data/web_static/current
-sudo ln -s -f /data/web_static/release/test /data/web_static/current
+sudo mkdir -p /data/web_static/current
+sudo ln -s -f /data/web_static/releasestest /data/web_static/current
 
 sudo chown -R ubuntu:ubuntu /data/
 
-sed -i '/listen 80 default_server/a location /hbnb_static {alias /data/web_static/current/;}' /etc/nginx/sites-available/default
+sudo sed -i '/listen 80 default_server/a location /hbnb_static { alias /data/web_static/current/;}' /etc/nginx/sites-available/default
 
 sudo service nginx restart
