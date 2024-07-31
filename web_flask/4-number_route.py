@@ -22,12 +22,16 @@ def show_c(text):
     text = text.replace('_', ' ')
     return f"C {text}"
 
-
 @app.route('/python/', strict_slashes=False)
 @app.route('/python/<text>', strict_slashes=False)
 def show_python(text='is cool'):
     text = text.replace('_', ' ')
     return f"Python {text}"
+
+
+@app.route('/number/<int:n>', strict_slashes=False)
+def show_num(n):
+    return f"{n} is a number"
 
 
 if __name__ == "__main__":
