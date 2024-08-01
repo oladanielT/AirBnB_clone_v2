@@ -21,8 +21,10 @@ class FileStorage:
             if isinstance(cls, str):
                 cls = globals().get(cls)
             if cls and issubclass(cls, BaseModel):
-                cls_dict = {k: v for k,
-                        v in self.__objects.items() if isinstance(v, cls)}
+                obj_ = self.__objects.items()
+                cls_dict = {
+                        k: v for k, v in obj_ if isinstance(v, cls)
+                        }
                 return cls_dict
         return FileStorage.__objects
 
@@ -51,7 +53,7 @@ class FileStorage:
             with open(FileStorage.__file_path, 'r') as f:
                 temp = json.load(f)
                 for key, val in temp.items():
-                        self.all()[key] = classes[val['__class__']](**val)
+                    self.all()[key] = classes[val['__class__']](**val)
         except FileNotFoundError:
             pass
 
@@ -60,13 +62,14 @@ class FileStorage:
         if obj is None:
             return
 
-        obj_t0_del = f"{obj.__class__.__name__}.{obj.id}"
+        obj_to_del = f"{obj.__class__.__name__}.{obj.id}"
         try:
             del FileStorage.__objects[obj_to_del]
         except AttributeError:
             pass
         except KeyboardInterrupt:
             pass
+
     def close(self):
         """Call the reload method"""
         self.reload()
