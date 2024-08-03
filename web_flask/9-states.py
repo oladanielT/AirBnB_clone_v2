@@ -19,7 +19,7 @@ def teardown(exception):
     storage.close()
 
 
-@app.route('/states', default={"id": 1} strict_slashes=False)
+@app.route('/states', defaults={"id": 1}, strict_slashes=False)
 @app.route('/states/<id>', strict_slashes=False)
 def states_id(id):
     """
