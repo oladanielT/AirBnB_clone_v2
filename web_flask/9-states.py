@@ -19,24 +19,20 @@ def teardown(exception):
     storage.close()
 
 
-@app.route('/states', strict_slashes=False)
-def states():
-    """
-    routes to state
-    """
-    states = storage.all('State').values()
-    return render_template('9-states.html', states=states)
-
-
+@app.route('/states', default={"id": 1} strict_slashes=False)
 @app.route('/states/<id>', strict_slashes=False)
 def states_id(id):
     """
     routes states_id
     """
-    for state in storage.all('State').values():
-        if state.id == id:
-            return render_template('9-states.html', state=state)
-    return render_template('9-states.html')
+    if id == 1:
+        states = storage.all('State').values()
+        return render_template('9-states.html', states=states)
+    else:
+        for state in storage.all('State').values():
+            if state.id == id:
+                return render_template('9-states.html', state=state)
+        return render_template('9-states.html')
 
 
 if __name__ == '__main__':
